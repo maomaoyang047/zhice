@@ -55,6 +55,7 @@ export default function GlobalOverview({
   }, [initialRegion]);
   const [dataDetailMode, setDataDetailMode] = useState<'current' | 'trend'>('current');
   const [tableToggleView, setTableToggleView] = useState<'module' | 'team'>('module');
+  const [quadrantGroup, setQuadrantGroup] = useState('全部');
   const [activeFilters, setActiveFilters] = useState({
     module: '全部',
     dimension: '全部',
@@ -227,7 +228,7 @@ export default function GlobalOverview({
       key="global-view"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 pb-12"
+      className="space-y-6 pb-12 relative"
     >
       {/* Assessment Results Section */}
       <div id="assessment-section" className="scroll-mt-48">
@@ -236,7 +237,7 @@ export default function GlobalOverview({
 
       {/* Module 1: Operational Metrics */}
       {showOperationalMetrics && (
-        <div id="operational-section" className="space-y-4">
+        <div id="operational-section" className="space-y-4 scroll-mt-24">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
             <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
@@ -265,7 +266,7 @@ export default function GlobalOverview({
       )}
 
       {/* Module 2: Professional Value Dashboard */}
-      <div id="professional-section" className="space-y-4">
+      <div id="professional-section" className="space-y-4 scroll-mt-24">
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
           <h2 className="text-lg font-bold text-gray-800 tracking-tight">专业价值</h2>
@@ -341,10 +342,11 @@ export default function GlobalOverview({
                 <span className="text-xs text-gray-400 font-normal ml-2">选择散点可查看右侧数据详情</span>
               </div>
               <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
-                {['全部', 'A组', 'B组', 'C组', 'D组', 'E组', 'F组'].map((group, i) => (
+                {['全部', 'A组', 'B组', 'C组', 'D组', 'E组'].map((group, i) => (
                   <button 
                     key={group}
-                    className={`px-3 py-0.5 rounded text-[10px] font-bold transition-all ${i === 0 ? 'bg-white shadow-sm text-brand-blue border border-gray-100' : 'text-gray-500 hover:text-gray-900'}`}
+                    onClick={() => setQuadrantGroup(group)}
+                    className={`px-3 py-0.5 rounded text-[10px] font-bold transition-all ${quadrantGroup === group ? 'bg-white shadow-sm text-brand-blue border border-gray-100' : 'text-gray-500 hover:text-gray-900'}`}
                   >
                     {group}
                   </button>
@@ -352,7 +354,7 @@ export default function GlobalOverview({
               </div>
             </div>
             <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-              <GlobalQuadrantChart />
+              <GlobalQuadrantChart selectedGroup={quadrantGroup} selectedRegion={selectedRegion} />
             </div>
             <div className="flex items-center justify-center gap-4 mt-2">
                <div className="flex items-center gap-2">
@@ -741,12 +743,12 @@ export default function GlobalOverview({
       </div>
 
       {/* Module 4: Risk Management */}
-      <div id="risk-section">
+      <div id="risk-section" className="scroll-mt-24">
         <RiskManagementModule />
       </div>
 
       {/* Module 5: Team Structure Status */}
-      <div id="team-structure-section">
+      <div id="team-structure-section" className="scroll-mt-24">
         <TeamStructureModule />
       </div>
     </motion.div>

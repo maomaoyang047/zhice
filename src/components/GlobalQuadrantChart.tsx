@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-export default function GlobalQuadrantChart() {
+export default function GlobalQuadrantChart({ selectedGroup = '全部', selectedRegion = '业务区整体' }: { selectedGroup?: string, selectedRegion?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -20,8 +20,7 @@ export default function GlobalQuadrantChart() {
     const g = svg.append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Data for Global View (strictly using the requested regions)
-    const data = [
+    const businessDistricts = [
       { id: '速运浙北区', x: 75, y: 80, color: '#4ade80' },
       { id: '速运广佛区', x: 82, y: 72, color: '#4ade80' },
       { id: '速运苏中区', x: 25, y: 70, color: '#facc15' },
@@ -29,12 +28,29 @@ export default function GlobalQuadrantChart() {
       { id: '速运内蒙古区', x: 28, y: 35, color: '#f87171' },
       { id: '速运上海区', x: 45, y: 75, color: '#4ade80' },
       { id: '速运福建区', x: 92, y: 85, color: '#4ade80' },
+    ];
+
+    const sortingCenters = [
       { id: '华东分拨区', x: 80, y: 60, color: '#facc15' },
       { id: '华南分拨区', x: 48, y: 68, color: '#4ade80' },
       { id: '鄂枢分拨区', x: 42, y: 38, color: '#f87171' },
       { id: '华北分拨区', x: 15, y: 30, color: '#f87171' },
       { id: '华西分拨区', x: 65, y: 92, color: '#4ade80' },
     ];
+
+    let rawData = businessDistricts;
+    if (selectedRegion === '分拨区整体') {
+      rawData = sortingCenters;
+    }
+
+    // Simple deterministic filter based on group letter to demonstrate 50% filtering
+    const data = selectedGroup === '全部' 
+      ? rawData 
+      : rawData.filter((_, i) => {
+          // For groups A, C, E, take evens. For groups B, D, take odds.
+          const isOddGroup = ['A组', 'C组', 'E组'].includes(selectedGroup);
+          return isOddGroup ? i % 2 === 0 : i % 2 !== 0;
+        });
 
     const xScale = d3.scaleLinear().domain([0, 100]).range([0, chartWidth]);
     const yScale = d3.scaleLinear().domain([0, 100]).range([chartHeight, 0]);
@@ -88,7 +104,7 @@ export default function GlobalQuadrantChart() {
       .attr("fill", "#4b5563")
       .text(d => d.id);
 
-  }, []);
+  }, [selectedGroup, selectedRegion]);
 
   return (
     <svg ref={svgRef} width="100%" height="420" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid meet"></svg>

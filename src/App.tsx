@@ -218,7 +218,7 @@ export default function App() {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white border-b border-gray-200 py-2 px-4 flex items-center justify-between sticky top-[88px] z-30 shadow-sm">
+      <div className="bg-white border-b border-gray-200 h-12 px-4 flex items-center justify-between sticky top-[88px] z-30 shadow-sm">
         <div className="flex items-center gap-6">
           <div className="flex border-b border-transparent">
             {['业务区', '分拨区', '职能条线', 'BU', 'BG'].map((tab) => (
@@ -283,9 +283,8 @@ export default function App() {
       </div>
 
       {/* Module Navigation Tabs */}
-      {(selectedOrg === '速运福建区' || selectedOrg === '华西分拨区' || selectedOrg === 'M线' || selectedOrg === '仓储' || selectedOrg === '供应链') && (
-        <div className="bg-white border-b border-gray-100 py-2 px-4 sticky top-[136px] z-20 shadow-sm overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-3">
+      <div className="bg-white border-b border-gray-100 py-2 px-4 sticky top-[136px] z-20 shadow-sm overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-3">
             {[
               { name: '评价结果', id: 'assessment' },
               { name: '经营达成', id: 'operational' },
@@ -322,7 +321,6 @@ export default function App() {
             ))}
           </div>
         </div>
-      )}
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto p-4 space-y-6 pb-20">
