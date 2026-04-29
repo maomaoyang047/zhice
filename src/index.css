@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-blue: #0034a5;
+  --color-brand-light-blue: #eef4ff;
+  --color-bg-gray: #f2f4f7;
+  --color-success-green: #00b42a;
+  --color-warning-yellow: #ffb400;
+  --color-danger-red: #f53f3f;
+  --color-info-purple: #722ed1;
+  --background-image-watermark: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-size='9' fill='rgba(0,0,0,0.025)' text-anchor='middle' alignment-baseline='middle' transform='rotate(-30 60 60)' font-family='monospace'%3E01428436%3C/text%3E%3C/svg%3E");
+}
+
+@layer base {
+  body {
+    @apply bg-bg-gray text-gray-800 font-sans;
+    background-image: var(--background-image-watermark);
+    background-repeat: repeat;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

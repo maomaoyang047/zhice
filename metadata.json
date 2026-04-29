@@ -1,0 +1,6 @@
+{
+  "name": "智策平台 - HRBP监测看板",
+  "description": "一个综合性的业务表现监测平台，包含四象限指标趋势图、详细指标对比表格及实时数据监控功能。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
