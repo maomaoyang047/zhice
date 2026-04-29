@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const data = [
+const districtData = [
   { x: 18, y: 55, label: '福州区', color: '#f59e0b' },
   { x: 30, y: 78, label: '福建区', color: '#10b981' },
   { x: 10, y: 40, label: '无锡区', color: '#ef4444' },
@@ -28,21 +28,67 @@ const data = [
   { x: 5, y: 32, label: '三明区', color: '#ef4444' },
 ];
 
+const sortingCenterData = [
+  { x: 25, y: 65, label: '华南分拨区', color: '#10b981' },
+  { x: 40, y: 75, label: '华西分拨区', color: '#f59e0b' },
+  { x: 15, y: 45, label: '华北分拨区', color: '#ef4444' },
+  { x: 60, y: 85, label: '鄂枢分拨区', color: '#10b981' },
+  { x: 50, y: 92, label: '华东分拨区', color: '#10b981' },
+];
+
+const functionalData = [
+  { x: 30, y: 75, label: 'H线', color: '#10b981' },
+  { x: 80, y: 85, label: 'M线', color: '#10b981' },
+  { x: 20, y: 40, label: 'O线', color: '#ef4444' },
+  { x: 60, y: 65, label: '审计', color: '#f59e0b' },
+  { x: 50, y: 70, label: '企发办', color: '#10b981' },
+];
+
+const buData = [
+  { x: 45, y: 60, label: '仓储', color: '#10b981' },
+  { x: 70, y: 80, label: '产业园', color: '#f59e0b' },
+  { x: 25, y: 35, label: '数科', color: '#ef4444' },
+  { x: 85, y: 90, label: '大件', color: '#10b981' },
+  { x: 35, y: 55, label: '小件', color: '#f59e0b' },
+];
+
+const bgData = [
+  { x: 65, y: 75, label: '供应链事业群', color: '#10b981' },
+];
+
 interface QuadrantChartProps {
   viewMode?: 'district' | 'global';
   filter?: 'all' | 'groupC';
+  orgType?: string;
 }
 
-export default function QuadrantChart({ viewMode = 'district', filter = 'all' }: QuadrantChartProps) {
+export default function QuadrantChart({ viewMode = 'district', filter = 'all', orgType = '业务区' }: QuadrantChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     if (!svgRef.current) return;
 
+    let data = districtData;
+    let highlightLabel = '福建区';
+
+    if (orgType === '分拨区') {
+      data = sortingCenterData;
+      highlightLabel = '华西分拨区';
+    } else if (orgType === '职能条线') {
+      data = functionalData;
+      highlightLabel = 'M线';
+    } else if (orgType === 'BU') {
+      data = buData;
+      highlightLabel = '仓储';
+    } else if (orgType === 'BG') {
+      data = bgData;
+      highlightLabel = '供应链事业群';
+    }
+
     // Filter points if Group C is selected: filter out 70% of points (keep 30%)
-    // But always keep '福建区' for context if it exists
-    const filteredData = filter === 'groupC' 
-      ? data.filter((d, i) => d.label === '福建区' || (i % 10 < 3)) 
+    // But always keep highlightLabel for context if it exists
+    const filteredData = filter === 'groupC' && orgType === '业务区'
+      ? data.filter((d, i) => d.label === highlightLabel || (i % 10 < 3)) 
       : data;
 
     const svg = d3.select(svgRef.current);
@@ -136,8 +182,8 @@ export default function QuadrantChart({ viewMode = 'district', filter = 'all' }:
       .append('circle')
       .attr('cx', d => x(d.x))
       .attr('cy', d => y(d.y))
-      .attr('r', d => d.label === '福建区' ? 7 : 5)
-      .attr('fill', d => d.label === '福建区' ? '#ef4444' : (d.y > 50 ? (d.x > 50 ? '#10b981' : '#f59e0b') : (d.x > 50 ? '#6366f1' : '#ef4444')))
+      .attr('r', d => d.label === highlightLabel ? 7 : 5)
+      .attr('fill', d => d.label === highlightLabel ? '#ef4444' : (d.y > 50 ? (d.x > 50 ? '#10b981' : '#f59e0b') : (d.x > 50 ? '#6366f1' : '#ef4444')))
       .attr('stroke', '#fff')
       .attr('stroke-width', 2)
       .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
@@ -145,17 +191,17 @@ export default function QuadrantChart({ viewMode = 'district', filter = 'all' }:
 
     // Add labels
     svg.selectAll('.label')
-      .data(filteredData.filter(d => d.label === '福建区' || d.x > 80 || d.y > 80 || d.x < 10))
+      .data(filteredData.filter(d => d.label === highlightLabel || d.x > 80 || d.y > 80 || d.x < 10))
       .enter()
       .append('text')
       .attr('x', d => x(d.x) + 8)
       .attr('y', d => y(d.y) - 8)
       .attr('font-size', '11px')
-      .attr('fill', d => d.label === '福建区' ? '#1e40af' : '#64748b')
-      .attr('font-weight', d => d.label === '福建区' ? 'bold' : 'normal')
+      .attr('fill', d => d.label === highlightLabel ? '#1e40af' : '#64748b')
+      .attr('font-weight', d => d.label === highlightLabel ? 'bold' : 'normal')
       .text(d => d.label);
 
-  }, [filter]);
+  }, [filter, orgType]);
 
   return (
     <div className="w-full h-full flex items-center justify-center">

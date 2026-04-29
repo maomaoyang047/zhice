@@ -23,8 +23,6 @@ import OperationalMetricCard from './OperationalMetricCard';
 import AssessmentResultsModule from './AssessmentResultsModule';
 import CollaborativeInfluenceModule from './CollaborativeInfluenceModule';
 import KeyEventsModule from './KeyEventsModule';
-import RiskManagementModule from './RiskManagementModule';
-import TeamStructureModule from './TeamStructureModule';
 import HRFiveDimensionChart from './HRFiveDimensionChart';
 
 interface GlobalOverviewProps {
@@ -341,17 +339,19 @@ export default function GlobalOverview({
                 </div>
                 <span className="text-xs text-gray-400 font-normal ml-2">选择散点可查看右侧数据详情</span>
               </div>
-              <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
-                {['全部', 'A组', 'B组', 'C组', 'D组', 'E组'].map((group, i) => (
-                  <button 
-                    key={group}
-                    onClick={() => setQuadrantGroup(group)}
-                    className={`px-3 py-0.5 rounded text-[10px] font-bold transition-all ${quadrantGroup === group ? 'bg-white shadow-sm text-brand-blue border border-gray-100' : 'text-gray-500 hover:text-gray-900'}`}
-                  >
-                    {group}
-                  </button>
-                ))}
-              </div>
+              {selectedRegion === '业务区整体' && (
+                <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
+                  {['全部', 'A组', 'B组', 'C组', 'D组', 'E组'].map((group, i) => (
+                    <button 
+                      key={group}
+                      onClick={() => setQuadrantGroup(group)}
+                      className={`px-3 py-0.5 rounded text-[10px] font-bold transition-all ${quadrantGroup === group ? 'bg-white shadow-sm text-brand-blue border border-gray-100' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                      {group}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="flex-1 flex items-center justify-center relative overflow-hidden">
               <GlobalQuadrantChart selectedGroup={quadrantGroup} selectedRegion={selectedRegion} />
@@ -740,16 +740,6 @@ export default function GlobalOverview({
       {/* Key Events Section */}
       <div id="key-events-section" className="scroll-mt-48">
         <KeyEventsModule restrictedOrg={selectedRegion} />
-      </div>
-
-      {/* Module 4: Risk Management */}
-      <div id="risk-section" className="scroll-mt-24">
-        <RiskManagementModule />
-      </div>
-
-      {/* Module 5: Team Structure Status */}
-      <div id="team-structure-section" className="scroll-mt-24">
-        <TeamStructureModule />
       </div>
     </motion.div>
   );

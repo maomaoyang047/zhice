@@ -37,8 +37,6 @@ import AssessmentResultsModule from './components/AssessmentResultsModule';
 import CollaborativeInfluenceModule from './components/CollaborativeInfluenceModule';
 import KeyEventsModule from './components/KeyEventsModule';
 import KeyWorkDeliveryModule from './components/KeyWorkDeliveryModule';
-import RiskManagementModule from './components/RiskManagementModule';
-import TeamStructureModule from './components/TeamStructureModule';
 import HistoryLightingDrawer from './components/HistoryLightingDrawer';
 
 export default function App() {
@@ -77,9 +75,7 @@ export default function App() {
               'hr-dimensions-section': '专业价值',
               'details-section': '专业价值',
               'collaborative-section': '协同影响',
-              'key-events-section': '关键事件',
-              'risk-section': '风险管理',
-              'team-structure-section': '队伍结构'
+              'key-events-section': '关键事件'
             };
             if (tabMap[sectionId]) {
               setActiveSection(tabMap[sectionId]);
@@ -291,9 +287,7 @@ export default function App() {
               { name: '专业价值', id: 'professional' },
               { name: '重点工作', id: 'key-work' },
               { name: '协同影响', id: 'collaborative' },
-              { name: '关键事件', id: 'key-events' },
-              { name: '风险管理', id: 'risk' },
-              { name: '队伍结构', id: 'team-structure' }
+              { name: '关键事件', id: 'key-events' }
             ].map((section) => (
               <button
                 key={section.id}
@@ -444,23 +438,25 @@ export default function App() {
                           )}
                         </AnimatePresence>
                       </div>
-                      <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
-                        <button 
-                          onClick={() => setScatterFilter('all')}
-                          className={`${scatterFilter === 'all' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                        >
-                          全部
-                        </button>
-                        <button 
-                          onClick={() => setScatterFilter('groupC')}
-                          className={`${scatterFilter === 'groupC' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                        >
-                          C组
-                        </button>
-                      </div>
+                      {activeTab === '业务区' && (
+                        <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
+                          <button 
+                            onClick={() => setScatterFilter('all')}
+                            className={`${scatterFilter === 'all' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
+                          >
+                            全部
+                          </button>
+                          <button 
+                            onClick={() => setScatterFilter('groupC')}
+                            className={`${scatterFilter === 'groupC' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
+                          >
+                            C组
+                          </button>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-                      <QuadrantChart viewMode="district" filter={scatterFilter} />
+                      <QuadrantChart viewMode="district" filter={scatterFilter} orgType={activeTab} />
                     </div>
                   </div>
                   
@@ -984,16 +980,6 @@ export default function App() {
             {/* Key Events */}
             <div id="key-events-section">
               <KeyEventsModule restrictedOrg={selectedOrg} />
-            </div>
-
-            {/* Module 3: Risk Management */}
-            <div id="risk-section">
-              <RiskManagementModule />
-            </div>
-
-            {/* Module 4: Team Structure Status */}
-            <div id="team-structure-section">
-              <TeamStructureModule />
             </div>
           </div>
         </motion.div>
