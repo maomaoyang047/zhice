@@ -337,24 +337,24 @@ export default function App() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <OperationalMetricCard 
-                  title="收入达成率"
-                  value="102.3"
-                  unit="%"
-                  groupAvg="98.5%"
+                  title="经营五维-收入"
+                  value="4.5"
+                  unit="分"
+                  groupAvg="4.2分"
                   yoy={{ value: '13.94%', isUp: true }}
                   mom={{ value: '11.45%', isUp: false }}
                   status="green"
-                  onClick={() => handleMetricClick('收入达成率')}
+                  onClick={() => handleMetricClick('经营五维-收入')}
                 />
                 <OperationalMetricCard 
-                  title="核心税前利润额达成率"
-                  value="98.5"
-                  unit="%"
-                  groupAvg="95.2%"
+                  title="经营五维-利润"
+                  value="4.2"
+                  unit="分"
+                  groupAvg="4.0分"
                   yoy={{ value: '8.22%', isUp: true }}
                   mom={{ value: '5.10%', isUp: true }}
                   status="yellow"
-                  onClick={() => handleMetricClick('核心税前利润额达成率')}
+                  onClick={() => handleMetricClick('经营五维-利润')}
                 />
               </div>
             </div>

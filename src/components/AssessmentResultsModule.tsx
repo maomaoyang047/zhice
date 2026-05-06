@@ -300,8 +300,8 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
   }, [restrictedOrg]);
 
   const weightDescription = 
-    viewType === 'M-LINE' || viewType === 'BU' ? '专业价值 60% (指标30%, 交付30%) | 协同影响 40% (下级10%, COE 30%) | 关键事件 ±分' :
-    viewType === 'BG' ? '专业价值 60% (指标40%, 交付20%) | 协同影响 40% (前线10%, 下级10%, COE 20%) | 关键事件 ±分' :
+    viewType === 'M-LINE' || viewType === 'BU' ? '专业价值 60% (指标30%, 交付30%) | 协同影响 20% (下级10%, COE 30%) | 关键事件 ±分' :
+    viewType === 'BG' ? '专业价值 60% (指标40%, 交付20%) | 协同影响 20% (前线10%, 下级10%, COE 20%) | 关键事件 ±分' :
     '经营关联 20% | 专业价值 60% | 协同影响 20% | 关键事件 ±分';
 
   return (
@@ -347,7 +347,7 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
                 <th colSpan={3} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-blue-50/30 text-brand-blue">经营关联(20%)</th>
               )}
               <th colSpan={3} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-purple-50/30 text-purple-600">专业价值(60%)</th>
-              <th colSpan={viewType === 'STANDARD' ? 5 : (viewType === 'M-LINE' || viewType === 'BU' ? 3 : 4)} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-teal-50/30 text-teal-600">协同影响(40%)</th>
+              <th colSpan={viewType === 'STANDARD' ? 5 : (viewType === 'M-LINE' || viewType === 'BU' ? 3 : 4)} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-teal-50/30 text-teal-600">协同影响(20%)</th>
               <th colSpan={4} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-orange-50/30 text-orange-600">关键事件(±)</th>
               <th rowSpan={3} className="px-3 py-3 border-r border-gray-200 font-bold text-center w-[70px] bg-blue-50 text-brand-blue">总得分</th>
               <th rowSpan={3} className="px-3 py-3 font-bold text-center w-[60px] bg-blue-50 text-brand-blue">排名</th>

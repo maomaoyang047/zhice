@@ -242,22 +242,22 @@ export default function GlobalOverview({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <OperationalMetricCard 
-              title="收入达成率"
-              value="102.3"
-              unit="%"
+              title="经营五维-收入"
+              value="4.5"
+              unit="分"
               yoy={{ value: '11.2%', isUp: true }}
               mom={{ value: '8.4%', isUp: true }}
               status="green"
-              onClick={() => onMetricClick?.('收入达成率')}
+              onClick={() => onMetricClick?.('经营五维-收入')}
             />
             <OperationalMetricCard 
-              title="核心税前利润额达成率"
-              value="98.5"
-              unit="%"
+              title="经营五维-利润"
+              value="4.2"
+              unit="分"
               yoy={{ value: '6.5%', isUp: true }}
               mom={{ value: '4.2%', isUp: true }}
               status="yellow"
-              onClick={() => onMetricClick?.('核心税前利润额达成率')}
+              onClick={() => onMetricClick?.('经营五维-利润')}
             />
           </div>
         </div>
