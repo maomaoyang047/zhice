@@ -23,7 +23,8 @@ import {
   TrendingUp,
   TrendingDown,
   Bell,
-  ArrowUp
+  ArrowUp,
+  ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import QuadrantChart from './components/QuadrantChart';
@@ -331,9 +332,15 @@ export default function App() {
 
             {/* Module 1: Operational Metrics */}
             <div id="operational-section" className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
-                <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
+                  <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
+                </div>
+                <a href="#" className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-blue transition-colors px-2 py-1 rounded bg-gray-50 hover:bg-blue-50">
+                  <span>查看经营五维看板</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <OperationalMetricCard 
