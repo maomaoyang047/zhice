@@ -73,8 +73,6 @@ export default function App() {
               'operational-section': '经营达成',
               'professional-section': '专业价值',
               'key-work-section': '重点工作',
-              'hr-dimensions-section': '专业价值',
-              'details-section': '专业价值',
               'collaborative-section': '协同影响',
               'key-events-section': '关键事件'
             };
@@ -92,8 +90,6 @@ export default function App() {
       'operational-section',
       'professional-section',
       'key-work-section',
-      'hr-dimensions-section',
-      'details-section',
       'collaborative-section',
       'key-events-section',
       'risk-section',
@@ -289,7 +285,12 @@ export default function App() {
               { name: '重点工作', id: 'key-work' },
               { name: '协同影响', id: 'collaborative' },
               { name: '关键事件', id: 'key-events' }
-            ].map((section) => (
+            ].filter(section => {
+              if (activeTab === '职能条线' && (section.id === 'operational' || section.id === 'professional')) {
+                return false;
+              }
+              return true;
+            }).map((section) => (
               <button
                 key={section.id}
                 onClick={() => {
@@ -330,9 +331,11 @@ export default function App() {
               <AssessmentResultsModule restrictedOrg={selectedOrg} />
             </div>
 
-            {/* Module 1: Operational Metrics */}
-            <div id="operational-section" className="space-y-3">
-              <div className="flex items-center justify-between">
+            {activeTab !== '职能条线' && (
+              <>
+                {/* Module 1: Operational Metrics */}
+                <div id="operational-section" className="space-y-3">
+                  <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
                   <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
@@ -365,415 +368,14 @@ export default function App() {
                 />
               </div>
             </div>
-
-            {/* Module 2: Professional Value Dashboard */}
-            <div id="professional-section" className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
-                <h2 className="text-lg font-bold text-gray-800 tracking-tight">专业价值</h2>
-              </div>
-
-              {/* Submodule: Quadrant Placement */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-1 h-3.5 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm font-bold text-gray-700">四象限落位</span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <SummaryCard 
-                    title="四象限区间" 
-                    value="黄色区间" 
-                    valueColor="text-warning-yellow"
-                  />
-                  <SummaryCard 
-                    title="当月表现对比各区" 
-                    value="低于均值" 
-                    highlight="低于"
-                    highlightColor="text-danger-red"
-                    valueColor="text-gray-900"
-                  />
-                  <SummaryCard 
-                    title="对比三个月历史趋势" 
-                    value="上升" 
-                    highlight="上升"
-                    highlightColor="text-success-green"
-                    valueColor="text-gray-900"
-                  />
-                </div>
-
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-8 bg-white rounded-xl border border-gray-100 p-4 shadow-sm min-h-[460px] flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2 relative">
-                        <span className="text-sm font-bold text-gray-800">数据表现</span>
-                        <HelpCircle className="w-4 h-4 text-blue-400 cursor-pointer" />
-                        <span 
-                          onClick={() => setIsLogicOpen(!isLogicOpen)}
-                          className="text-xs text-brand-blue cursor-pointer hover:underline font-medium"
-                        >
-                          逻辑说明
-                        </span>
-                        
-                        <AnimatePresence>
-                          {isLogicOpen && (
-                            <motion.div 
-                              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                              className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 p-5"
-                            >
-                               <div className="flex items-center justify-between mb-4">
-                                 <h3 className="text-lg font-black text-gray-900 tracking-tight">逻辑说明</h3>
-                                 <button onClick={() => setIsLogicOpen(false)} className="text-gray-400 hover:text-gray-900">×</button>
-                               </div>
-                               <div className="space-y-3">
-                                 {[
-                                   { color: 'bg-success-green', text: '绿色区间：优秀地区' },
-                                   { color: 'bg-warning-yellow', text: '黄色区间：潜力地区' },
-                                   { color: 'bg-info-purple', text: '紫色区间：保持地区' },
-                                   { color: 'bg-danger-red', text: '红色区间：关注地区' }
-                                 ].map((item, idx) => (
-                                   <div key={idx} className="flex items-center gap-3">
-                                     <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                                     <span className="text-sm text-gray-600 font-medium">{item.text}</span>
-                                   </div>
-                                 ))}
-                               </div>
-                               <div className="absolute -top-2 left-10 w-4 h-4 bg-white border-t border-l border-gray-100 transform rotate-45"></div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                      {activeTab === '业务区' && (
-                        <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
-                          <button 
-                            onClick={() => setScatterFilter('all')}
-                            className={`${scatterFilter === 'all' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                          >
-                            全部
-                          </button>
-                          <button 
-                            onClick={() => setScatterFilter('groupC')}
-                            className={`${scatterFilter === 'groupC' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                          >
-                            C组
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-                      <QuadrantChart viewMode="district" filter={scatterFilter} orgType={activeTab} />
-                    </div>
-                  </div>
-                  
-                  <div className="col-span-4 bg-white rounded-xl border border-gray-100 p-4 flex flex-col shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm font-bold text-gray-800">数据详情</span>
-                      <div className="bg-gray-100/50 rounded p-0.5 flex border border-gray-200">
-                        <button 
-                          onClick={() => setDetailTab('current')}
-                          className={`${detailTab === 'current' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                        >
-                          看当月
-                        </button>
-                        <button 
-                          onClick={() => setDetailTab('trend')}
-                          className={`${detailTab === 'trend' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-500 hover:text-gray-900'} px-3 py-0.5 rounded text-[10px] font-bold transition-all`}
-                        >
-                          看趋势
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4 h-full flex flex-col">
-                      {detailTab === 'current' ? (
-                        <div className="space-y-4 h-full flex flex-col">
-                          <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
-                            <div className="flex items-baseline gap-2 mb-2">
-                              <span className="text-sm text-gray-600 font-medium">当月亮灯指标共</span>
-                              <span className="text-3xl font-black text-gray-900">10</span>
-                              <span className="text-sm text-gray-600">个</span>
-                              <ArrowUp className="w-4 h-4 text-gray-300" />
-                            </div>
-                            <div className="text-xs text-gray-400 font-medium">
-                              所有指标综合亮灯得分排序 <span className="text-danger-red font-bold">低于</span> 地区值
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-3">
-                            <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm relative overflow-hidden">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Bell className="w-4 h-4 text-red-400" />
-                                <span className="text-sm font-bold text-gray-800">红灯指标</span>
-                                <span className="text-2xl font-black text-gray-900 ml-auto leading-none">2</span>
-                                <span className="text-[10px] text-gray-400 self-end mb-1">个</span>
-                              </div>
-                              <div className="text-[10px] text-gray-400 space-y-2 leading-relaxed">
-                                <p>一线平台用工占比：<span className="font-bold text-gray-700">8.13%</span></p>
-                                <p>一线月薪增长达成率：<span className="font-bold text-gray-700">50.18%</span></p>
-                              </div>
-                            </div>
-                            
-                            <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Bell className="w-4 h-4 text-orange-400" />
-                                <span className="text-sm font-bold text-gray-800">红黄灯指标</span>
-                                <span className="text-2xl font-black text-gray-900 ml-auto leading-none">0</span>
-                                <span className="text-[10px] text-gray-400 self-end mb-1">个</span>
-                              </div>
-                              <div className="text-[10px] text-gray-400 font-medium pt-2">
-                                无
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 h-full flex flex-col">
-                          <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
-                            <div className="flex items-baseline gap-2 mb-2">
-                              <span className="text-sm text-gray-600 font-bold">当月指标较上期</span>
-                            </div>
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-sm text-gray-600">整体呈</span>
-                              <span className="text-2xl font-black text-success-green">改善</span>
-                              <span className="text-sm text-gray-600">趋势</span>
-                            </div>
-                          </div>
-                          
-                          <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm h-full">
-                            <div className="flex items-baseline gap-1 mb-4">
-                              <span className="text-sm font-bold text-gray-800">趋势</span>
-                              <span className="text-sm font-bold text-success-green">上升</span>
-                              <span className="text-sm font-bold text-gray-800 ml-1">指标</span>
-                              <span className="text-2xl font-black text-gray-900 ml-1">1</span>
-                              <span className="text-xs text-gray-400 ml-1">个</span>
-                              <TrendingUp className="w-4 h-4 text-success-green ml-auto" />
-                            </div>
-                            <div className="text-xs text-gray-400 leading-relaxed space-y-1">
-                              <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-success-green rounded-full"></div>
-                                <span>一线月薪增长达成率：<span className="text-danger-red font-bold">红灯</span> 升为 <span className="text-success-green font-bold">绿灯</span></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Merged Module: Overall Achievement & HR Dimensions */}
-              <div id="hr-dimensions-section" className="space-y-6 pt-6 border-t border-gray-100">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-1 h-3.5 bg-blue-400 rounded-full"></div>
-                    <span className="text-sm font-bold text-gray-700">五维表现</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-                  <div className="grid grid-cols-3 gap-6 divide-x divide-gray-50">
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-xs text-gray-400 font-medium">整体平均分</span>
-                        <div className="relative group/tooltip">
-                          <HelpCircle className="w-3 h-3 text-gray-300 cursor-help" />
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover/tooltip:block z-50 w-56 p-2 bg-gray-900/95 backdrop-blur-md text-white text-[10px] rounded shadow-xl pointer-events-none border border-white/10">
-                            <div className="font-bold text-blue-400 border-b border-white/10 pb-1 mb-1">计算逻辑</div>
-                            <p className="leading-relaxed opacity-90">整体平均分为所有指标的得分均值，绿灯为5分，黄绿灯4分，黄灯3分，红黄灯2分，红灯1分，不亮灯指标不计分</p>
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900/95"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-brand-blue">4.6</span>
-                        <span className="text-[10px] text-gray-400">分</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-xs text-gray-400 font-medium">全网排名</span>
-                        <div className="relative group/tooltip">
-                          <HelpCircle className="w-3 h-3 text-gray-300 cursor-help" />
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover/tooltip:block z-50 w-48 p-2 bg-gray-900/95 backdrop-blur-md text-white text-[10px] rounded shadow-xl pointer-events-none border border-white/10">
-                            <div className="font-bold text-blue-400 border-b border-white/10 pb-1 mb-1">计算逻辑</div>
-                            <p className="leading-relaxed opacity-90">整体平均分在全网35个业务区中排名</p>
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900/95"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-gray-800">19</span>
-                          <span className="text-[10px] text-gray-400 inline-block px-1 font-bold">/ 35名</span>
-                        </div>
-                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-green-500">
-                          环比趋势 <TrendingUp className="w-2.5 h-2.5" /> 2名
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-xs text-gray-400 font-medium">分组排名</span>
-                        <div className="relative group/tooltip">
-                          <HelpCircle className="w-3 h-3 text-gray-300 cursor-help" />
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover/tooltip:block z-50 w-48 p-2 bg-gray-900/95 backdrop-blur-md text-white text-[10px] rounded shadow-xl pointer-events-none border border-white/10">
-                            <div className="font-bold text-blue-400 border-b border-white/10 pb-1 mb-1">计算逻辑</div>
-                            <p className="leading-relaxed opacity-90">整体平均分在同组业务区中排名</p>
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900/95"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-gray-800">3</span>
-                          <span className="text-[10px] text-gray-400 inline-block px-1 font-bold">/ 6名</span>
-                        </div>
-                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-red-500">
-                          环比趋势 <TrendingDown className="w-2.5 h-2.5" /> 1名
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-4 bg-white rounded-xl border border-gray-100 p-4 shadow-sm h-[400px] flex flex-col items-center relative overflow-hidden">
-                    <div className="w-full flex items-center gap-2 mb-4">
-                      <div className="w-1 h-3 bg-blue-400 rounded-full"></div>
-                      <span className="text-xs font-bold text-gray-700">五维表现分布</span>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center w-full">
-                      <HRFiveDimensionChart 
-                      data={[
-                        { axis: '组织效率', value: 4.17 },
-                        { axis: '薪酬竞争力', value: 2.73 },
-                        { axis: '队伍建设', value: 4.33 },
-                        { axis: '人员保有', value: 4.5 },
-                        { axis: '组织氛围与风险', value: 4.96 },
-                      ]} 
-                      avgData={[
-                        { axis: '组织效率', value: 3.8 },
-                        { axis: '薪酬竞争力', value: 3.2 },
-                        { axis: '队伍建设', value: 4.0 },
-                        { axis: '人员保有', value: 4.2 },
-                        { axis: '组织氛围与风险', value: 4.5 },
-                      ]}
-                    />
-                  </div>
-                </div>
-                  
-                <div className="col-span-8 bg-white rounded-xl border border-gray-100 p-4 shadow-sm h-[400px] overflow-y-auto">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="bg-red-50 p-1.5 rounded-lg">
-                        <TrendingDown className="w-4 h-4 text-red-500" />
-                      </div>
-                      <span className="text-sm font-bold text-gray-800">需关注</span>
-                    </div>
-                    
-                    <div className="space-y-6 px-2">
-                      {/* 组织效率 */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-warning-yellow"></div>
-                          <span className="text-sm font-bold text-gray-700">组织效率：<span className="font-medium text-gray-500 ml-1">弱项维度为</span>人均创收</span>
-                        </div>
-                        <div className="pl-6 space-y-2">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-warning-yellow"></div>
-                              <span className="text-xs text-gray-600">人均创收(一二三线整体)：累计<span className="font-bold text-gray-900 mx-1">4.17分</span></span>
-                            </div>
-                            <span className="text-[10px] text-green-500 font-bold flex items-center gap-0.5">同比 +3.5% <TrendingUp className="w-2.5 h-2.5" /></span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-warning-yellow"></div>
-                              <span className="text-xs text-gray-600">人工成本占收入比：累计<span className="font-bold text-gray-900 mx-1">92.5%</span></span>
-                            </div>
-                            <span className="text-[10px] text-green-500 font-bold flex items-center gap-0.5">改善 <ArrowUp className="w-2.5 h-2.5 rotate-180" /></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 薪酬竞争力 */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-warning-yellow"></div>
-                          <span className="text-sm font-bold text-gray-700">薪酬竞争力：<span className="font-medium text-gray-500 ml-1">弱项维度为</span>职能三线绩优员工</span>
-                        </div>
-                        <div className="pl-6 space-y-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-danger-red"></div>
-                              <span className="text-xs text-gray-600">职能三线绩优员工薪酬竞争力：<span className="font-bold text-gray-900 mx-1">2.73分</span></span>
-                            </div>
-                            <span className="text-[10px] text-red-500 font-bold flex items-center gap-0.5">同比 -1.45% <TrendingDown className="w-2.5 h-2.5" /></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 队伍建设 */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-warning-yellow"></div>
-                          <span className="text-sm font-bold text-gray-700">队伍建设：<span className="font-medium text-gray-500 ml-1">弱项维度为</span>大学生队伍建设</span>
-                        </div>
-                        <div className="pl-6 space-y-2">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-warning-yellow"></div>
-                              <span className="text-xs text-gray-600">大学生队伍建设：累计<span className="font-bold text-gray-900 mx-1">4.33分</span></span>
-                            </div>
-                            <span className="text-[10px] text-green-500 font-bold flex items-center gap-0.5">同比 +5.2% <TrendingUp className="w-2.5 h-2.5" /></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 人员保有 */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-warning-yellow"></div>
-                          <span className="text-sm font-bold text-gray-700">人员保有：<span className="font-medium text-gray-500 ml-1">弱项维度为</span>一线流失率</span>
-                        </div>
-                        <div className="pl-6 space-y-2">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-danger-red"></div>
-                              <span className="text-xs text-gray-600">一线面客群体流失率：累计<span className="font-bold text-gray-900 mx-1">4.5分</span></span>
-                            </div>
-                            <span className="text-[10px] text-red-500 font-bold flex items-center gap-0.5">异动明显 <Bell className="w-2.5 h-2.5" /></span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 组织氛围与风险 */}
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-warning-yellow"></div>
-                          <span className="text-sm font-bold text-gray-700">组织氛围与风险：<span className="font-medium text-gray-500 ml-1">弱项维度为</span>人员风险健康度</span>
-                        </div>
-                        <div className="pl-6 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-warning-yellow"></div>
-                              <span className="text-xs text-gray-600">人员风险健康度：累计<span className="font-bold text-gray-900 mx-1">4.96分</span></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </>
+            )}
 
             {/* Detailed Metrics Table Container */}
-            <div id="details-section" className="space-y-4 pt-4 border-t border-gray-100 mt-6">
+            <div id="professional-section" className="space-y-4 pt-4 border-t border-gray-100 mt-6">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-1 h-3.5 bg-blue-400 rounded-full"></div>
-                <h2 className="text-sm font-bold text-gray-700">具体指标表现对比</h2>
+                <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
+                <h2 className="text-lg font-bold text-gray-800 tracking-tight">专业价值</h2>
                 <div className="flex gap-4 ml-6">
                   <button 
                     onClick={() => {
@@ -972,11 +574,11 @@ export default function App() {
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Key Work Delivery Module added here */}
-              <div id="key-work-section">
-                <KeyWorkDeliveryModule restrictedOrg={selectedOrg} />
-              </div>
+            {/* Key Work Delivery Module added here */}
+            <div id="key-work-section">
+              <KeyWorkDeliveryModule restrictedOrg={selectedOrg} />
             </div>
 
             {/* Collaborative Influence */}
@@ -988,7 +590,6 @@ export default function App() {
             <div id="key-events-section">
               <KeyEventsModule restrictedOrg={selectedOrg} />
             </div>
-          </div>
         </motion.div>
       ) : (
           <GlobalOverview 
@@ -997,6 +598,7 @@ export default function App() {
             selectedTime={selectedTime} 
             onMetricClick={handleMetricClick}
             initialRegion={selectedOrg}
+            orgType={activeTab}
             availableRegions={orgs}
             onRegionChange={setSelectedOrg}
             onViewDistrictDetail={() => {

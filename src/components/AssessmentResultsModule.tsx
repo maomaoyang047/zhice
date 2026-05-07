@@ -248,9 +248,9 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
 
   const viewType = useMemo(() => {
     const org = restrictedOrg || selectedOrg;
-    if (org === 'M线') return 'M-LINE';
-    if (org === '仓储') return 'BU';
-    if (org === '供应链') return 'BG';
+    if (['职能条线整体', '职能条线', 'H线', 'M线', 'O线', '审计', '企发办'].includes(org)) return 'M-LINE';
+    if (['BU整体', 'BU', '仓储', '产业园', '数科', '大件', '小件'].includes(org)) return 'BU';
+    if (['BG整体', 'BG', '供应链事业群', '供应链'].includes(org)) return 'BG';
     return 'STANDARD';
   }, [restrictedOrg, selectedOrg]);
 
@@ -300,8 +300,8 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
   }, [restrictedOrg]);
 
   const weightDescription = 
-    viewType === 'M-LINE' || viewType === 'BU' ? '专业价值 60% (指标30%, 交付30%) | 协同影响 20% (下级10%, COE 30%) | 关键事件 ±分' :
-    viewType === 'BG' ? '专业价值 60% (指标40%, 交付20%) | 协同影响 20% (前线10%, 下级10%, COE 20%) | 关键事件 ±分' :
+    viewType === 'M-LINE' || viewType === 'BU' ? '专业价值 60% (指标30%, 交付30%) | 协同影响 40% (下级10%, COE 30%) | 关键事件 ±分' :
+    viewType === 'BG' ? '专业价值 60% (指标40%, 交付20%) | 协同影响 40% (前线10%, 下级10%, COE 20%) | 关键事件 ±分' :
     '经营关联 20% | 专业价值 60% | 协同影响 20% | 关键事件 ±分';
 
   return (
@@ -347,7 +347,7 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
                 <th colSpan={3} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-blue-50/30 text-brand-blue">经营关联(20%)</th>
               )}
               <th colSpan={3} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-purple-50/30 text-purple-600">专业价值(60%)</th>
-              <th colSpan={viewType === 'STANDARD' ? 5 : (viewType === 'M-LINE' || viewType === 'BU' ? 3 : 4)} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-teal-50/30 text-teal-600">协同影响(20%)</th>
+              <th colSpan={viewType === 'STANDARD' ? 5 : (viewType === 'M-LINE' || viewType === 'BU' ? 3 : 4)} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-teal-50/30 text-teal-600">协同影响({viewType === 'M-LINE' || viewType === 'BU' || viewType === 'BG' ? '40%' : '20%'})</th>
               <th colSpan={4} className="px-3 py-2 border-r border-gray-200 font-bold text-center bg-orange-50/30 text-orange-600">关键事件(±)</th>
               <th rowSpan={3} className="px-3 py-3 border-r border-gray-200 font-bold text-center w-[70px] bg-blue-50 text-brand-blue">总得分</th>
               <th rowSpan={3} className="px-3 py-3 font-bold text-center w-[60px] bg-blue-50 text-brand-blue">排名</th>
