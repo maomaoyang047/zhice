@@ -54,12 +54,6 @@ export default function OperationalMetricCard({
             </div>
           </div>
         </div>
-        <div 
-          className="flex items-center text-brand-blue font-bold text-xs hover:underline cursor-pointer transition-all active:scale-95" 
-          onClick={(e) => { e.stopPropagation(); onClick(); }}
-        >
-          看趋势
-        </div>
       </div>
 
       <div className="flex items-center gap-3 mb-4">

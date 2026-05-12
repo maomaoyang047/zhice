@@ -338,11 +338,11 @@ export default function App() {
                   <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
-                  <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
+                  <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营达成</h2>
                 </div>
-                <a href="#" className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-blue transition-colors px-2 py-1 rounded bg-gray-50 hover:bg-blue-50">
+                <a href="#" className="flex items-center gap-1.5 text-xs text-brand-blue border border-brand-blue hover:bg-blue-50 transition-colors px-3 py-1.5 rounded">
                   <span>查看经营五维看板</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -350,9 +350,8 @@ export default function App() {
                   title="经营五维-收入"
                   value="4.5"
                   unit="分"
-                  groupAvg="4.2分"
-                  yoy={{ value: '13.94%', isUp: true }}
-                  mom={{ value: '11.45%', isUp: false }}
+                  yoy={{ value: '11.2%', isUp: true }}
+                  mom={{ value: '8.4%', isUp: true }}
                   status="green"
                   onClick={() => handleMetricClick('经营五维-收入')}
                 />
@@ -360,9 +359,8 @@ export default function App() {
                   title="经营五维-利润"
                   value="4.2"
                   unit="分"
-                  groupAvg="4.0分"
-                  yoy={{ value: '8.22%', isUp: true }}
-                  mom={{ value: '5.10%', isUp: true }}
+                  yoy={{ value: '6.5%', isUp: true }}
+                  mom={{ value: '4.2%', isUp: true }}
                   status="yellow"
                   onClick={() => handleMetricClick('经营五维-利润')}
                 />
@@ -373,7 +371,7 @@ export default function App() {
 
             {/* Detailed Metrics Table Container */}
             <div id="professional-section" className="space-y-4 pt-4 border-t border-gray-100 mt-6">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-4">
                 <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
                 <h2 className="text-lg font-bold text-gray-800 tracking-tight">专业价值</h2>
                 <div className="flex gap-4 ml-6">
@@ -402,146 +400,64 @@ export default function App() {
                 </div>
               </div>
 
+              <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100 flex items-center gap-6 mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 font-bold">{tableToggleView === 'module' ? '模块' : '队伍'}:</span>
+                  <div className="relative">
+                    <select 
+                      className="text-xs bg-white border border-gray-300 rounded px-3 py-1.5 min-w-[120px] focus:ring-0 focus:border-brand-blue text-gray-800 font-medium cursor-pointer appearance-none"
+                      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                      value={activeFilters.module}
+                      onChange={(e) => setActiveFilters(prev => ({ ...prev, module: e.target.value, dimension: '全部' }))}
+                    >
+                      {(tableToggleView === 'module' ? modules : teams).map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 font-bold">{tableToggleView === 'module' ? '维度' : '群体'}:</span>
+                  <div className="relative">
+                    <select 
+                      className="text-xs bg-white border border-gray-300 rounded px-3 py-1.5 min-w-[160px] focus:ring-0 focus:border-brand-blue text-gray-800 font-medium cursor-pointer appearance-none truncate pr-8"
+                      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                      value={activeFilters.dimension}
+                      onChange={(e) => setActiveFilters(prev => ({ ...prev, dimension: e.target.value }))}
+                    >
+                      {(tableToggleView === 'module' ? dimensions : groups).map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+                
+                {/* Light Filter */}
+                <div className="flex items-center gap-2 ml-auto">
+                  <span className="text-xs text-gray-500 font-bold">亮灯:</span>
+                  <div className="relative">
+                    <select 
+                      className="text-xs bg-white border border-gray-300 rounded px-3 py-1.5 min-w-[120px] focus:ring-0 focus:border-brand-blue text-gray-800 font-medium cursor-pointer appearance-none truncate pr-8"
+                      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                      value={activeFilters.light}
+                      onChange={(e) => setActiveFilters(prev => ({ ...prev, light: e.target.value }))}
+                    >
+                      {lights.map(opt => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+              </div>
+
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-bold text-gray-800">指标详情清单</span>
-                    
-                    {/* Module Filter (Team Filter) */}
-                    <div className="relative">
-                      <div 
-                         onClick={() => setOpenFilterDropdown(openFilterDropdown === 'module' ? null : 'module')}
-                         className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 min-w-[140px] bg-gray-50 hover:border-brand-blue cursor-pointer transition-colors"
-                      >
-                        <span className="text-xs text-gray-400 mr-auto font-medium">{tableToggleView === 'module' ? '模块' : '队伍'} | <span className="text-gray-900">{activeFilters.module}</span></span>
-                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${openFilterDropdown === 'module' ? 'rotate-180' : ''}`} />
-                      </div>
-                      <AnimatePresence>
-                        {openFilterDropdown === 'module' && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 5 }}
-                            className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-xl z-50 py-1"
-                          >
-                            {(tableToggleView === 'module' ? modules : teams).map(opt => (
-                              <div 
-                                key={opt}
-                                onClick={() => {
-                                  setActiveFilters(prev => ({ ...prev, module: opt }));
-                                  setOpenFilterDropdown(null);
-                                }}
-                                className={`px-4 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.module === opt ? 'text-brand-blue bg-blue-50 font-bold' : 'text-gray-600'}`}
-                              >
-                                {opt}
-                              </div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {/* Dimension Filter (Group Filter) */}
-                    <div className="relative">
-                      <div 
-                        onClick={() => setOpenFilterDropdown(openFilterDropdown === 'dimension' ? null : 'dimension')}
-                        className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 min-w-[140px] bg-gray-50 hover:border-brand-blue cursor-pointer transition-colors"
-                      >
-                        <span className="text-xs text-gray-400 mr-auto font-medium">{tableToggleView === 'module' ? '维度' : '群体'} | <span className="text-gray-900">{activeFilters.dimension}</span></span>
-                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${openFilterDropdown === 'dimension' ? 'rotate-180' : ''}`} />
-                      </div>
-                      <AnimatePresence>
-                        {openFilterDropdown === 'dimension' && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 5 }}
-                            className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-xl z-50 py-1 max-h-60 overflow-y-auto"
-                          >
-                            {(tableToggleView === 'module' ? dimensions : groups).map(opt => (
-                              <div 
-                                key={opt}
-                                onClick={() => {
-                                  setActiveFilters(prev => ({ ...prev, dimension: opt }));
-                                  setOpenFilterDropdown(null);
-                                }}
-                                className={`px-4 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.dimension === opt ? 'text-brand-blue bg-blue-50 font-bold' : 'text-gray-600'}`}
-                              >
-                                {opt}
-                              </div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {/* Type Filter */}
-                    <div className="relative">
-                      <div 
-                        onClick={() => setOpenFilterDropdown(openFilterDropdown === 'type' ? null : 'type')}
-                        className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 min-w-[140px] bg-gray-50 hover:border-brand-blue cursor-pointer transition-colors"
-                      >
-                        <span className="text-xs text-gray-400 mr-auto font-medium">类型 | <span className="text-gray-900">{activeFilters.type}</span></span>
-                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${openFilterDropdown === 'type' ? 'rotate-180' : ''}`} />
-                      </div>
-                      <AnimatePresence>
-                        {openFilterDropdown === 'type' && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 5 }}
-                            className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-xl z-50 py-1"
-                          >
-                            {types.map(opt => (
-                              <div 
-                                key={opt}
-                                onClick={() => {
-                                  setActiveFilters(prev => ({ ...prev, type: opt }));
-                                  setOpenFilterDropdown(null);
-                                }}
-                                className={`px-4 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.type === opt ? 'text-brand-blue bg-blue-50 font-bold' : 'text-gray-600'}`}
-                              >
-                                {opt}
-                              </div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    {/* Light Filter */}
-                    <div className="relative">
-                      <div 
-                        onClick={() => setOpenFilterDropdown(openFilterDropdown === 'light' ? null : 'light')}
-                        className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5 min-w-[140px] bg-gray-50 hover:border-brand-blue cursor-pointer transition-colors"
-                      >
-                        <span className="text-xs text-gray-400 mr-auto font-medium">亮灯 | <span className="text-gray-900">{activeFilters.light}</span></span>
-                        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${openFilterDropdown === 'light' ? 'rotate-180' : ''}`} />
-                      </div>
-                      <AnimatePresence>
-                        {openFilterDropdown === 'light' && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 5 }}
-                            className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded shadow-xl z-50 py-1"
-                          >
-                            {lightResults.map(opt => (
-                              <div 
-                                key={opt}
-                                onClick={() => {
-                                  setActiveFilters(prev => ({ ...prev, light: opt }));
-                                  setOpenFilterDropdown(null);
-                                }}
-                                className={`px-4 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.light === opt ? 'text-brand-blue bg-blue-50 font-bold' : 'text-gray-600'}`}
-                              >
-                                {opt}
-                              </div>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-4 text-xs font-black text-brand-blue">

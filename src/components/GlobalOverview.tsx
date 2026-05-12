@@ -243,11 +243,11 @@ export default function GlobalOverview({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
-              <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营/关键任务达成</h2>
+              <h2 className="text-lg font-bold text-gray-800 tracking-tight">经营达成</h2>
             </div>
-            <a href="#" className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-blue transition-colors px-2 py-1 rounded bg-gray-50 hover:bg-blue-50">
+            <a href="#" className="flex items-center gap-1.5 text-xs text-brand-blue border border-brand-blue hover:bg-blue-50 transition-colors px-3 py-1.5 rounded">
               <span>查看经营五维看板</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -297,95 +297,67 @@ export default function GlobalOverview({
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-4 border-b border-gray-100 bg-gray-50/30 flex flex-wrap gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-gray-500 font-bold">{label1}:</span>
-                <div className="relative">
-                  <div 
-                    onClick={() => setOpenFilterDropdown(openFilterDropdown === 'module' ? null : 'module')}
-                    className="flex items-center gap-2 border border-gray-300 rounded px-2 py-1 min-w-[100px] bg-white cursor-pointer hover:border-brand-blue"
-                  >
-                    <span className="text-[11px]">{activeFilters.module}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-auto" />
-                  </div>
-                  {openFilterDropdown === 'module' && (
-                    <div className="absolute top-full left-0 mt-1 w-32 bg-white border border-gray-200 rounded shadow-xl z-50 py-1">
-                      {currentOptions1.map(m => (
-                        <div 
-                          key={m} 
-                          onClick={() => {
-                            setActiveFilters({...activeFilters, module: m, dimension: '全部'});
-                            setOpenFilterDropdown(null);
-                          }}
-                          className={`px-3 py-1.5 text-[11px] cursor-pointer hover:bg-gray-50 ${activeFilters.module === m ? 'text-brand-blue font-bold bg-blue-50' : 'text-gray-600'}`}
-                        >
-                          {m}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+          <div className="bg-gray-50/50 p-3 rounded-lg border border-gray-100 flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 font-bold">{label1}:</span>
+              <div className="relative">
+                <div 
+                  onClick={() => setOpenFilterDropdown(openFilterDropdown === 'module' ? null : 'module')}
+                  className="flex items-center gap-2 border border-gray-300 rounded px-3 py-1.5 min-w-[120px] bg-white cursor-pointer hover:border-brand-blue transition-colors"
+                >
+                  <span className="text-xs text-gray-800 font-medium">{activeFilters.module}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-auto" />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-gray-500 font-bold">{label2}:</span>
-                <div className="relative">
-                  <div 
-                    onClick={() => setOpenFilterDropdown(openFilterDropdown === 'dimension' ? null : 'dimension')}
-                    className="flex items-center gap-2 border border-gray-300 rounded px-2 py-1 min-w-[120px] bg-white cursor-pointer hover:border-brand-blue"
-                  >
-                    <span className="text-[11px] text-gray-900 truncate max-w-[100px]">{activeFilters.dimension}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-auto" />
+                {openFilterDropdown === 'module' && (
+                  <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded shadow-xl z-50 py-1 max-h-60 overflow-y-auto">
+                    {currentOptions1.map(m => (
+                      <div 
+                        key={m} 
+                        onClick={() => {
+                          setActiveFilters({...activeFilters, module: m, dimension: '全部'});
+                          setOpenFilterDropdown(null);
+                        }}
+                        className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.module === m ? 'text-brand-blue font-bold bg-blue-50' : 'text-gray-600'}`}
+                      >
+                        {m}
+                      </div>
+                    ))}
                   </div>
-                  {openFilterDropdown === 'dimension' && (
-                    <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 rounded shadow-xl z-50 py-1 max-h-60 overflow-y-auto">
-                      {currentOptions2.map(d => (
-                        <div 
-                          key={d} 
-                          onClick={() => {
-                            setActiveFilters({...activeFilters, dimension: d});
-                            setOpenFilterDropdown(null);
-                          }}
-                          className={`px-3 py-1.5 text-[11px] cursor-pointer hover:bg-gray-50 ${activeFilters.dimension === d ? 'text-brand-blue font-bold bg-blue-50' : 'text-gray-600'}`}
-                        >
-                          {d}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] text-gray-500 font-bold">指标类型:</span>
-                <div className="relative">
-                  <div 
-                    onClick={() => setOpenFilterDropdown(openFilterDropdown === 'type' ? null : 'type')}
-                    className="flex items-center gap-2 border border-gray-300 rounded px-2 py-1 min-w-[100px] bg-white cursor-pointer hover:border-brand-blue"
-                  >
-                    <span className="text-[11px]">{activeFilters.type}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-auto" />
-                  </div>
-                  {openFilterDropdown === 'type' && (
-                    <div className="absolute top-full left-0 mt-1 w-32 bg-white border border-gray-200 rounded shadow-xl z-50 py-1">
-                      {types.map(t => (
-                        <div 
-                          key={t} 
-                          onClick={() => {
-                            setActiveFilters({...activeFilters, type: t});
-                            setOpenFilterDropdown(null);
-                          }}
-                          className={`px-3 py-1.5 text-[11px] cursor-pointer hover:bg-gray-50 ${activeFilters.type === t ? 'text-brand-blue font-bold bg-blue-50' : 'text-gray-600'}`}
-                        >
-                          {t}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 font-bold">{label2}:</span>
+              <div className="relative">
+                <div 
+                  onClick={() => setOpenFilterDropdown(openFilterDropdown === 'dimension' ? null : 'dimension')}
+                  className="flex items-center gap-2 border border-gray-300 rounded px-3 py-1.5 min-w-[160px] bg-white cursor-pointer hover:border-brand-blue transition-colors"
+                >
+                  <span className="text-xs text-gray-800 font-medium truncate max-w-[120px]">{activeFilters.dimension}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-gray-400 ml-auto" />
+                </div>
+                {openFilterDropdown === 'dimension' && (
+                  <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-200 rounded shadow-xl z-50 py-1 max-h-60 overflow-y-auto">
+                    {currentOptions2.map(d => (
+                      <div 
+                        key={d} 
+                        onClick={() => {
+                          setActiveFilters({...activeFilters, dimension: d});
+                          setOpenFilterDropdown(null);
+                        }}
+                        className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-50 ${activeFilters.dimension === d ? 'text-brand-blue font-bold bg-blue-50' : 'text-gray-600'}`}
+                      >
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mt-4">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <span className="text-sm font-bold">指标详情清单</span>

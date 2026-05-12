@@ -310,29 +310,30 @@ export default function AssessmentResultsModule({ restrictedOrg }: AssessmentRes
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
           <h2 className="text-lg font-bold text-gray-800 tracking-tight">评价结果</h2>
-          <span className="text-[10px] text-gray-400 font-normal ml-2">（该模块仅人力资源部负责人可见）</span>
           
-          <div className="ml-6 flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
-            <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
-            <select 
-              value={selectedOrg}
-              onChange={(e) => setSelectedOrg(e.target.value)}
-              className="bg-transparent text-xs font-bold text-gray-700 outline-none cursor-pointer"
-            >
-              {uniqueOrgs.map(org => (
-                <option key={org} value={org}>{org}</option>
-              ))}
-            </select>
-            <ChevronDown className="w-3 h-3 text-gray-400" />
-          </div>
+          {(!restrictedOrg || restrictedOrg.includes('整体')) && (
+            <div className="ml-6 flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
+              <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
+              <select 
+                value={selectedOrg}
+                onChange={(e) => setSelectedOrg(e.target.value)}
+                className="bg-transparent text-xs font-bold text-gray-700 outline-none cursor-pointer"
+              >
+                {uniqueOrgs.map(org => (
+                  <option key={org} value={org}>{org}</option>
+                ))}
+              </select>
+              <ChevronDown className="w-3 h-3 text-gray-400" />
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
-            <span className="w-2 h-2 rounded-full bg-brand-blue"></span>
-            <span>权重说明: {weightDescription}</span>
-          </div>
+        
+        <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded border border-gray-100">
+          <div className="w-1.5 h-1.5 rounded-full bg-brand-blue"></div>
+          <span>权重说明: 经营关联 20% | 专业价值 60% | 协同影响 20% | 关键事件 ±分</span>
         </div>
       </div>
+
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto no-scrollbar">
         <table className="w-full border-collapse border-spacing-0 text-[10px] min-w-[1400px]">

@@ -80,6 +80,7 @@ export default function GlobalMetricsTable({ filters, viewType = 'module' }: { f
     .map(mod => ({
       ...mod,
       items: mod.items.filter(item => {
+        if (item.type === '监测项') return false;
         if (!filters) return true;
         
         if (viewType === 'module') {
@@ -137,7 +138,6 @@ export default function GlobalMetricsTable({ filters, viewType = 'module' }: { f
               {viewType === 'module' ? '维度' : '关联群体'}
             </th>
             <th className="px-3 py-2 border-r border-gray-200 font-bold text-left min-w-[200px]">指标名称</th>
-            <th className="px-3 py-2 border-r border-gray-200 font-bold text-center w-[75px]">指标类型</th>
             <th className="px-3 py-2 border-r border-gray-200 font-bold text-center w-[75px]">取数时间</th>
             <th className="px-3 py-2 border-r border-gray-200 font-bold text-center w-[100px]">地区整体均值</th>
             <th className="px-2 py-2 border-r border-gray-200 font-bold text-center bg-green-50/50 w-[92px] text-success-green">绿灯占比(%)</th>
@@ -191,7 +191,6 @@ export default function GlobalMetricsTable({ filters, viewType = 'module' }: { f
                     )
                   )}
                   <td className="px-3 py-2 border-r border-gray-200 text-gray-700 font-medium">{item.name}</td>
-                  <td className="px-3 py-2 border-r border-gray-200 text-center text-gray-500">{item.type}</td>
                   <td className="px-3 py-2 border-r border-gray-200 text-center text-gray-500">{item.time}</td>
                   <td className="px-3 py-2 border-r border-gray-200 text-center font-black text-gray-900">{item.avg}</td>
                   <td className={`px-3 py-2 border-r border-gray-200 text-center font-bold bg-green-50/10 ${parseFloat(item.green) >= 60 ? 'text-success-green' : 'text-gray-900'}`}>{item.green}%</td>

@@ -128,6 +128,30 @@ const keyEventsData = [
     weight: '加分项',
     source: '招聘处',
     score: 0.30
+  },
+  {
+    org: '速运福建区',
+    name: '王斌',
+    position: '人力资源部负责人',
+    tenure: '0.83',
+    category: '抗灾保障',
+    content: '在台风灾害期间妥善组织员工安置及业务恢复',
+    rule: '加0.2分',
+    weight: '加分项',
+    source: '集团工会',
+    score: 0.20
+  },
+  {
+    org: '华西分拨区',
+    name: '王志刚',
+    position: '人力资源部负责人',
+    tenure: '2.95',
+    category: '技能比武大比拼',
+    content: '组织全区业务操作技能大赛，获集团宣传表彰',
+    rule: '加0.15分',
+    weight: '加分项',
+    source: '企业文化部',
+    score: 0.15
   }
 ];
 
@@ -173,8 +197,10 @@ export default function KeyEventsModule({ restrictedOrg }: KeyEventsModuleProps)
     return data;
   }, [restrictedOrg, selectedOrgFilter]);
 
-  // Update local filter options based on filtered view
   const orgOptions = React.useMemo(() => {
+    if (restrictedOrg && !restrictedOrg.includes('整体')) {
+      return [restrictedOrg];
+    }
     const baseData = restrictedOrg === '业务区整体' 
       ? keyEventsData.filter(i => businessDistricts.includes(i.org))
       : restrictedOrg === '分拨区整体'
@@ -209,21 +235,22 @@ export default function KeyEventsModule({ restrictedOrg }: KeyEventsModuleProps)
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-6 bg-orange-500 rounded-full"></div>
           <h2 className="text-lg font-bold text-gray-800 tracking-tight">关键事件</h2>
-          <span className="text-[10px] text-gray-400 font-normal ml-2">（该模块仅人力资源部负责人可见）</span>
         </div>
 
-        <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
-          <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
-          <select 
-            className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
-            value={selectedOrgFilter}
-            onChange={(e) => setSelectedOrgFilter(e.target.value)}
-          >
-            {orgOptions.map(org => (
-              <option key={org} value={org}>{org}</option>
-            ))}
-          </select>
-        </div>
+        {(!restrictedOrg || restrictedOrg.includes('整体')) && (
+          <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
+            <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
+            <select 
+              className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
+              value={selectedOrgFilter}
+              onChange={(e) => setSelectedOrgFilter(e.target.value)}
+            >
+              {orgOptions.map(org => (
+                <option key={org} value={org}>{org}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -264,12 +291,14 @@ export default function KeyEventsModule({ restrictedOrg }: KeyEventsModuleProps)
               </tr>
             ))}
             {filteredData.length > 0 ? (
-              <tr className="bg-gray-50/30">
-                <td colSpan={9} className="px-4 py-3 text-right font-bold text-gray-500">关键事件累计得分:</td>
-                <td className={`px-4 py-3 text-center font-black text-lg bg-orange-50/30 ${parseFloat(totalScore) >= 0 ? 'text-orange-600' : 'text-danger-red'}`}>
-                  {parseFloat(totalScore) > 0 ? `+${totalScore}` : totalScore}
-                </td>
-              </tr>
+              !['业务区整体', '分拨区整体'].includes(restrictedOrg || '') ? (
+                <tr className="bg-gray-50/30">
+                  <td colSpan={9} className="px-4 py-3 text-right font-bold text-gray-500">关键事件累计得分:</td>
+                  <td className={`px-4 py-3 text-center font-black text-lg bg-orange-50/30 ${parseFloat(totalScore) >= 0 ? 'text-orange-600' : 'text-danger-red'}`}>
+                    {parseFloat(totalScore) > 0 ? `+${totalScore}` : totalScore}
+                  </td>
+                </tr>
+              ) : null
             ) : (
               <tr>
                 <td colSpan={10} className="px-4 py-10 text-center text-gray-400 italic">暂无匹配的组织数据</td>

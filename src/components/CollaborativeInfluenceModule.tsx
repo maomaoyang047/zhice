@@ -27,7 +27,33 @@ const collaborativeData = [
     source: '组织与效能处',
     score: 4.2
   },
+  {
+    org: '速运福建区',
+    name: '王斌',
+    position: '人力资源部负责人',
+    tenure: '0.83',
+    category: '下级评价',
+    content: '团队领导力评价',
+    rule: '得分比重',
+    weight: '10%',
+    source: '考核小组',
+    score: 4.8
+  },
+  {
+    org: '速运福建区',
+    name: '王斌',
+    position: '人力资源部负责人',
+    tenure: '0.83',
+    category: 'COE评价',
+    content: '专业支撑响应速度',
+    rule: '量化得分',
+    weight: '5%',
+    source: 'CHO-COE',
+    score: 4.8
+  },
   { org: '速运浙北区', name: '刘杏叶', position: '人力资源部负责人', tenure: '2.15', category: '评价得分', content: '年度满意度', rule: '综分', weight: '10%', source: '区部办公室', score: 4.4 },
+  { org: '速运浙北区', name: '刘杏叶', position: '人力资源部负责人', tenure: '2.15', category: '下级评价', content: '团队氛围打分', rule: '综分', weight: '10%', source: '考核小组', score: 4.5 },
+  { org: '速运浙北区', name: '刘杏叶', position: '人力资源部负责人', tenure: '2.15', category: 'COE评价', content: '政委政策执行度', rule: '量化得分', weight: '10%', source: 'CHO-COE', score: 4.6 },
   { org: '速运上海区', name: '郑国英', position: '人力资源部负责人', tenure: '5.53', category: '评价得分', content: '季度协同分', rule: '平分', weight: '10%', source: '上海区经委', score: 4.6 },
   { org: '速运广佛区', name: '宋文婷', position: '人力资源部负责人', tenure: '5.34', category: '评价得分', content: '员工关怀指数', rule: '综分', weight: '10%', source: '广佛区部', score: 4.7 },
   { org: '速运河南区', name: '李军伟', position: '人力资源部负责人', tenure: '4.90', category: '评价得分', content: '效能评估得分', rule: '综分', weight: '10%', source: '河南区部', score: 4.6 },
@@ -197,8 +223,10 @@ export default function CollaborativeInfluenceModule({ restrictedOrg }: Collabor
     return data;
   }, [restrictedOrg, selectedOrgFilter]);
 
-  // Update local filter options based on filtered view
   const orgOptions = React.useMemo(() => {
+    if (restrictedOrg && !restrictedOrg.includes('整体')) {
+      return [restrictedOrg];
+    }
     const baseData = restrictedOrg === '业务区整体' 
       ? collaborativeData.filter(i => businessDistricts.includes(i.org))
       : restrictedOrg === '分拨区整体'
@@ -235,21 +263,22 @@ export default function CollaborativeInfluenceModule({ restrictedOrg }: Collabor
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-6 bg-brand-blue rounded-full"></div>
           <h2 className="text-lg font-bold text-gray-800 tracking-tight">协同影响</h2>
-          <span className="text-[10px] text-gray-400 font-normal ml-2">（该模块仅人力资源部负责人可见）</span>
         </div>
 
-        <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
-          <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
-          <select 
-            className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
-            value={selectedOrgFilter}
-            onChange={(e) => setSelectedOrgFilter(e.target.value)}
-          >
-            {orgOptions.map(org => (
-              <option key={org} value={org}>{org}</option>
-            ))}
-          </select>
-        </div>
+        {(!restrictedOrg || restrictedOrg.includes('整体')) && (
+          <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
+            <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
+            <select 
+              className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
+              value={selectedOrgFilter}
+              onChange={(e) => setSelectedOrgFilter(e.target.value)}
+            >
+              {orgOptions.map(org => (
+                <option key={org} value={org}>{org}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -290,12 +319,14 @@ export default function CollaborativeInfluenceModule({ restrictedOrg }: Collabor
               </tr>
             ))}
             {filteredData.length > 0 ? (
-              <tr className="bg-gray-50/30">
-                <td colSpan={9} className="px-4 py-3 text-right font-bold text-gray-500">总分 (加权平均得分):</td>
-                <td className="px-4 py-3 text-center font-black text-brand-blue bg-blue-50/30 text-lg">
-                  {totalScore}
-                </td>
-              </tr>
+              !['业务区整体', '分拨区整体'].includes(restrictedOrg || '') ? (
+                <tr className="bg-gray-50/30">
+                  <td colSpan={9} className="px-4 py-3 text-right font-bold text-gray-500">总分 (加权平均得分):</td>
+                  <td className="px-4 py-3 text-center font-black text-brand-blue bg-blue-50/30 text-lg">
+                    {totalScore}
+                  </td>
+                </tr>
+              ) : null
             ) : (
               <tr>
                 <td colSpan={10} className="px-4 py-10 text-center text-gray-400 italic">暂无匹配的组织数据</td>

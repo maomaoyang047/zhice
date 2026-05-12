@@ -167,6 +167,28 @@ const keyWorkData = [
     requirement: '培训参与率100%',
     score: 4.6,
     rule: '按标准赋分'
+  },
+  {
+    org: '速运福建区',
+    name: '王斌',
+    position: '人力资源部负责人',
+    tenure: '0.83',
+    taskName: '春运人员保障',
+    content: '提前规划春运高峰期用工需求设置专项激励方案，人员到位率98%',
+    requirement: '人员到位率>95%',
+    score: 4.8,
+    rule: '按标准赋分'
+  },
+  {
+    org: '华西分拨区',
+    name: '王志刚',
+    position: '人力资源部负责人',
+    tenure: '2.95',
+    taskName: '夜班关怀升级',
+    content: '优化华西枢纽夜班员工食宿及交通补贴方案，提升员工体验',
+    requirement: '员工满意度提升',
+    score: 4.6,
+    rule: '按标准赋分'
   }
 ];
 
@@ -213,8 +235,10 @@ export default function KeyWorkDeliveryModule({ restrictedOrg }: KeyWorkDelivery
     return data;
   }, [restrictedOrg, selectedOrgFilter]);
 
-  // Update local filter options based on filtered view
   const orgOptions = React.useMemo(() => {
+    if (restrictedOrg && !restrictedOrg.includes('整体')) {
+      return [restrictedOrg];
+    }
     const baseData = restrictedOrg === '业务区整体' 
       ? keyWorkData.filter(i => businessDistricts.includes(i.org))
       : restrictedOrg === '分拨区整体'
@@ -251,21 +275,22 @@ export default function KeyWorkDeliveryModule({ restrictedOrg }: KeyWorkDelivery
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-6 bg-purple-600 rounded-full"></div>
           <h2 className="text-lg font-bold text-gray-800 tracking-tight">重点工作交付</h2>
-          <span className="text-[10px] text-gray-400 font-normal ml-2">（该模块仅人力资源部负责人可见）</span>
         </div>
 
-        <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
-          <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
-          <select 
-            className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
-            value={selectedOrgFilter}
-            onChange={(e) => setSelectedOrgFilter(e.target.value)}
-          >
-            {orgOptions.map(org => (
-              <option key={org} value={org}>{org}</option>
-            ))}
-          </select>
-        </div>
+        {(!restrictedOrg || restrictedOrg.includes('整体')) && (
+          <div className="flex items-center gap-2 bg-gray-100/80 rounded-lg px-3 py-1.5 border border-gray-200">
+            <span className="text-xs text-gray-500 font-bold">组织筛选:</span>
+            <select 
+              className="text-xs bg-transparent border-none focus:ring-0 text-gray-700 font-medium cursor-pointer"
+              value={selectedOrgFilter}
+              onChange={(e) => setSelectedOrgFilter(e.target.value)}
+            >
+              {orgOptions.map(org => (
+                <option key={org} value={org}>{org}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -305,12 +330,14 @@ export default function KeyWorkDeliveryModule({ restrictedOrg }: KeyWorkDelivery
               </tr>
             ))}
             {filteredData.length > 0 ? (
-              <tr className="bg-purple-50/30">
-                <td colSpan={8} className="px-4 py-3 text-right font-bold text-gray-500">总分 (加权平均得分):</td>
-                <td className="px-4 py-3 text-center font-black text-purple-700 bg-purple-50/30 text-lg">
-                  {averageScore}
-                </td>
-              </tr>
+              !['业务区整体', '分拨区整体'].includes(restrictedOrg || '') ? (
+                <tr className="bg-purple-50/30">
+                  <td colSpan={8} className="px-4 py-3 text-right font-bold text-gray-500">总分 (加权平均得分):</td>
+                  <td className="px-4 py-3 text-center font-black text-purple-700 bg-purple-50/30 text-lg">
+                    {averageScore}
+                  </td>
+                </tr>
+              ) : null
             ) : (
               <tr>
                 <td colSpan={9} className="px-4 py-10 text-center text-gray-400 italic">暂无匹配的组织数据</td>

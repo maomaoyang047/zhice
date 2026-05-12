@@ -105,6 +105,7 @@ export default function MetricsTable({ hideEmpty, onDetailClick, filters, viewTy
     .map(moduleData => ({
       ...moduleData,
       items: moduleData.items.filter(item => {
+        if (item.type === '监测项') return false;
         if (filters) {
           if (viewType === 'module') {
             if (filters.module !== '全部' && moduleData.module !== filters.module) return false;
@@ -174,7 +175,6 @@ export default function MetricsTable({ hideEmpty, onDetailClick, filters, viewTy
               </>
             )}
             <th rowSpan={2} className="px-3 py-3 border-r border-gray-200 font-bold text-left w-[240px]">指标名称</th>
-            <th rowSpan={2} className="px-3 py-3 border-r border-gray-200 font-bold w-[80px] text-center">指标类型</th>
             <th rowSpan={2} className="px-3 py-3 border-r border-gray-200 font-bold w-[80px] text-center">取数时间</th>
             <th colSpan={2} className="px-3 py-2 border-r border-b border-gray-200 font-bold text-center">当前表现</th>
             <th colSpan={2} className="px-3 py-2 border-r border-b border-gray-200 font-bold text-center">对比三个月历史改善情况</th>
@@ -288,13 +288,6 @@ export default function MetricsTable({ hideEmpty, onDetailClick, filters, viewTy
                         </div>
                       </div>
                     </div>
-                  </td>
-                  <td className="px-3 py-3 text-center border-r border-gray-100">
-                    <span className={`px-2 py-0.5 rounded-[2px] text-[10px] min-w-[56px] inline-block font-medium ${
-                      item.type === '评价项' ? 'text-brand-blue bg-blue-50 border border-blue-100' : 'text-gray-400 bg-gray-50 border border-gray-200'
-                    }`}>
-                      {item.type}
-                    </span>
                   </td>
                   <td className="px-3 py-3 text-center font-medium text-gray-500 border-r border-gray-100">
                     {item.time}
